@@ -1,11 +1,11 @@
 from roblib import *  # available at https://www.ensta-bretagne.fr/jaulin/roblib.py
 
-def draw(x,w):
+def draw0(x,w):
     clean3D(ax,-10,10,-10,10,0,20)
     draw_axis3D(ax,0,0,0,eye(3,3),10)
     draw_robot3D(ax,x[0:3],eulermat(*x[4:7,0]),'blue')
-    # draw_robot3D(ax,w[0:3],eulermat(*w[4:7,0]),'red')
-    ax.scatter(1,2,3,color='magenta')
+    # draw_robot3D(ax,w[0:3],eulermat(*x[4:7,0]),'red', size=0.1)
+    ax.scatter(w[0,0],w[1,0],w[2,0],color='magenta')
 
 def f(x,u):
     """
@@ -31,7 +31,7 @@ def control(x,w,dw,ddw):
     cp=cos(ψ)
     sp=sin(ψ)
     A1=array([
-        [ct*cp  , -v*st*cp  ,   -v*st*cp],
+        [ct*cp  , -v*ct*sp  ,   -v*st*cp],
         [ct*sp  , v*ct*cp   ,   -v*st*sp],
         [-st     ,   0       ,   -v*ct]])
     A2=array([
@@ -41,7 +41,7 @@ def control(x,w,dw,ddw):
     A=A1@A2
     dp=v*array([[ct*cp],[ct*sp],[-st]])
     p=x[0:3]
-    u=inv(A)*(0.04*(w-p) + 0.4*(dw-dp) + ddw)
+    u=inv(A)*(0.04*(w-p)+0.4*(dw-dp)+ddw)
     return u
 
 def setpoint(t):
@@ -53,7 +53,7 @@ def setpoint(t):
     f3=3*f1
     R=20
     w=R*array([
-        [f1*sin(f1*t)+sin(f2*t)],
+        [sin(f1*t)+sin(f2*t)],
         [cos(f1*t)+cos(f2*t)],
         [sin(f3*t)]])
     dw=R*array([
@@ -67,13 +67,13 @@ def setpoint(t):
     return w,dw,ddw
 
 x = array([[0,0,10,15,0,1,0]]).T
+print(x.shape)
 dt = 0.1
 ax = Axes3D(figure())    
-for t in arange(0,2,dt):
+for t in arange(0,50,dt):
     w,dw,ddw=setpoint(t)
     u = control(x,w,dw,ddw)
-    xdot=f(x,u)
-    x = x + dt * xdot
-    draw(x,w)
+    x = x + dt * f(x,u)
+    draw0(x,w)
     pause(0.001)
 pause(1)    

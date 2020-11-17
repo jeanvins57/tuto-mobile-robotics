@@ -16,7 +16,7 @@ def control(x,w,dw,ddw):
         [   x[3,0]*cos(x[2,0])      ,   sin(x[2,0])]])
     y=array([
         [x[0,0]],
-        [x[2,0]],])
+        [x[1,0]],])
     dy=array([
         [x[3,0]*cos(x[2,0])],
         [x[3,0]*sin(x[2,0])]]),
@@ -25,22 +25,24 @@ def control(x,w,dw,ddw):
     return u
 
 ax=init_figure(-30,30,-30,30)
-dt = 0.02
+dt = 0.01
 x = array([[10],[0],[1],[1]]) # x1,x2,x3(heading),x4(speed)
-u = array([[1],[1]])
+# u = array([[1],[1]])
 L=10
 s = arange(0,50,0.01)
 E=[] # erreur
-time=3
+time=10
 for t in arange(0,time,dt) :
     clear(ax)
     plot(L*cos(s), L*sin(3*s),color='magenta')
     draw_tank(x,'red')  
     w=L*array([[cos(t)],[sin(3*t)]])
-    dw=L*array([[-sin(t)],[3*cos(t)]]) 
-    ddw=L*array([[-cos(t)],[-9*sin(t)]])
+    dw=L*array([[-sin(t)],[3*cos(3*t)]]) 
+    ddw=L*array([[-cos(t)],[-9*sin(3*t)]])
     u=control(x,w,dw,ddw)
+
     E.append(abs(x[0,0]-w[0,0])+abs(x[1,0]-w[1,0]))
+
     draw_disk(w,0.5,ax,"red")    
     x = x + dt*f(x,u)
     print("time=",t)
