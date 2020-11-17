@@ -1,3 +1,6 @@
+# Jean-Vincent KLEIN
+# FISE 2022
+# page39
 
 from roblib import *  # available at https://www.ensta-bretagne.fr/jaulin/roblib.py
 
@@ -36,6 +39,7 @@ for t in arange(0,time,dt) :
     clear(ax)
     plot(L*cos(s), L*sin(3*s),color='magenta')
     draw_tank(x,'red')  
+
     w=L*array([[cos(t)],[sin(3*t)]])
     dw=L*array([[-sin(t)],[3*cos(3*t)]]) 
     ddw=L*array([[-cos(t)],[-9*sin(3*t)]])

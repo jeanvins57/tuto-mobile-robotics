@@ -17,7 +17,6 @@ def control(xa,xb,v):
         [0          ,       0       ,   1]])
     x=x0@(xb-xa)
     print(x0)
-
     A=array([
         [-1,x[1,0]],
         [0,-1]])
